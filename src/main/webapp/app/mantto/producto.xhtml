@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Cliente</ui:define>
+
+    <ui:define name="content">   
+        <h:form prependId="false">
+            <div class="grid dashboard ">
+                <div class="col-12">
+                    <div class="card">
+                        <h5>Datos Generales</h5>
+                        <div class="grid">
+                            <div class="col-12 md:col-12" jsf:id="dvDatos">
+                                <div class="formgrid grid">
+                                    <div class="field col-12" >
+                                        <p:outputLabel for="txtCod" value="Código"/>
+                                        <p:inputText id="txtCod" value="#{productoView.producto.codigo}"
+                                                     class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" required="true"/>
+                                    </div>
+                                    <div class="field col-12" >
+                                        <p:outputLabel for="txtNom" value="Nombre"/>
+                                        <p:inputText id="txtNom" value="#{productoView.producto.nombre}" required="true"
+                                                     class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+                                    </div>
+                                    <div class="field col-12" >
+                                        <p:outputLabel for="txtPu" value="Precio Unitario"/>
+                                        <p:inputText id="txtPu" value="#{productoView.producto.precioUnitario}" required="true" 
+                                                     class="surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+                                    </div>
+                                    <div class="field col-12" >
+                                        <p:outputLabel for="cboUni" value="Unidad de Medida"/>
+                                        <p:selectOneMenu id="cboUni" value="#{productoView.producto.idUnidadMedida}" 
+                                                         class="w-full text-base text-color surface-overlay border-1 border-solid surface-border border-round outline-none focus:border-primary" style="appearance: auto">
+                                            <f:selectItem noSelectionOption="true" itemLabel="SELECCIONE UNA UNIDAD" />
+                                            <f:selectItems value="#{catalogoService.lstTipoUnidadMedida}" var="uni" itemLabel="#{uni.descripcion}" itemValue="#{uni.idUnidadMedida}" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="field col-12">
+                                        <p:commandButton value="Nuevo" icon="pi pi-file" action="#{productoView.nuevo()}" update="dvDatos tblPro" style="margin-right: 5px;" process="@this"/>
+                                        <p:commandButton value="Guardar" icon="pi pi-save" action="#{productoView.guardar()}" update="dvDatos tblPro"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <p:messages showSummary="true" showIcon="false" showDetail="true">
+                <p:autoUpdate />
+            </p:messages>
+
+            <div class="card">
+                <p:dataTable id="tblPro" widgetVar="tblPro" var="pro" value="#{catalogoService.lstProducto}" rowKey="#{pro.idProducto}"
+                             rowIndexVar="rowId" selectionMode="single" selection="#{productoView.producto}"
+                             paginator="true" paginatorPosition="top" rows="10" reflow="true" >
+                    <p:ajax event="rowSelect" update="dvDatos" listener="#{productoView.onRowSelect}"/>
+                    <p:column headerText="Código">
+                        <p:outputLabel value="#{pro.codigo}"/>
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <p:outputLabel value="#{pro.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Precio Unitario">
+                        <p:outputLabel value="#{pro.precioUnitario}" style="float: right;">
+                            <f:convertNumber pattern="#,###.00"/>
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column headerText="Unidad Med.">
+                        <p:selectOneMenu value="#{pro.idUnidadMedida}" disabled="true"
+                                         class="w-full text-base text-color surface-overlay border-1 border-solid surface-border border-round outline-none focus:border-primary" style="appearance: auto">
+                            <f:selectItem noSelectionOption="true" itemLabel="SELECCIONE UNA UNIDAD" />
+                            <f:selectItems value="#{catalogoService.lstTipoUnidadMedida}" var="uni" itemLabel="#{uni.descripcion}" itemValue="#{uni.idUnidadMedida}" />
+                        </p:selectOneMenu>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

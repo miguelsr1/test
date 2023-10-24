@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Cliente</ui:define>
+
+    <ui:define name="content">   
+        <h:form prependId="false">
+            <div class="grid dashboard ">
+                <div class="col-12">
+                    <div class="card">
+                        <h5>Datos Generales</h5>
+                        <div class="grid">
+                            <div class="col-12 md:col-12" jsf:id="dvDatos">
+                                <div class="formgrid grid">
+                                    <div class="field col-12" >
+                                        <p:outputLabel for="txtCod" value="Código"/>
+                                        <p:inputText id="txtCod" value="#{tipoUnidadView.tipoUnidad.codigo}" maxlength="5"
+                                                     class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" required="true"/>
+                                    </div>
+                                    <div class="field col-12" >
+                                        <p:outputLabel for="txtNom" value="Nombre"/>
+                                        <p:inputText id="txtNom" value="#{tipoUnidadView.tipoUnidad.descripcion}" required="true"
+                                                     class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+                                    </div>
+                                    <div class="field col-12">
+                                        <p:commandButton value="Nuevo" icon="pi pi-file" action="#{tipoUnidadView.nuevo()}" update="dvDatos tblPro" style="margin-right: 5px;" process="@this"/>
+                                        <p:commandButton value="Guardar" icon="pi pi-save" action="#{tipoUnidadView.guardar()}" update="dvDatos tblPro"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <p:messages showSummary="true" showIcon="false" showDetail="true">
+                <p:autoUpdate />
+            </p:messages>
+
+            <div class="card">
+                <p:dataTable id="tblPro" widgetVar="tblPro" var="tipo" value="#{catalogoService.lstTipoUnidadMedida}" rowKey="#{tipo.idUnidadMedida}"
+                             rowIndexVar="rowId" selectionMode="single" selection="#{tipoUnidadView.tipoUnidad}"
+                             paginator="true" paginatorPosition="top" rows="10" reflow="true" >
+                    <p:ajax event="rowSelect" update="dvDatos" listener="#{tipoUnidadView.onRowSelect}"/>
+                    <p:column headerText="Código">
+                        <p:outputLabel value="#{tipo.codigo}"/>
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <p:outputLabel value="#{tipo.descripcion}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
